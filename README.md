@@ -1,10 +1,10 @@
-#Principles:
+# Principles:
 - Hexagonal architecture
 - DDD
 - Modular monolith with bounded context equals module
 - CQS - use separate backend models for query (reads) vs command (data changes) but use the same db
 
-#Project/folder structure:
+# Project/folder structure:
 - Folder for each module named [ProductName].[ModuleName]
 - [ProductName].Domain.[ModuleName] project for each module (bounded context)
 - under it we add folders by feature names
@@ -51,7 +51,7 @@
 - [ProductName].AsyncJobs.[ModuleName] (optional)
 - use to start hangfire and execute async jobs
 
-#DDD:
+# Guideliness:
 - Try to use small aggregates, better to use two if possible, than one large. Think how many properties of the aggergate does your command really need, if it's just a few, and the aggergate is already heavy, consider creating a new one. Usualy if one command changes one property, the other just read's it, so we can split them, since we won't violate invariant. Of course we prefer to have all actions on the same object, if it's performant :).
 - Use access modifiers to expres the intent to others using your code what you meant. Only aggergates and only it's application used methods are set as public, only methods used by other objects are internal, and everything else is private (or protected).
 - All of our aggregates and entities need public constructors so we can create them in our repositories, these are not to be used anywhere else
@@ -73,7 +73,7 @@
 - try to use value objects for properties that change togeather (eg. price which has amount and currency, use a separate class instead of having amount and currency on entity)
 - create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
 
-#Querstions:
+# Querstions:
 - IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... think we don't need it in domain, right?
 - transaction accross modules with different UnitsOfWork on each module wrapped in transaction?
 - feature name is the application service (without the service part) name also maybe equals to aggreget root? Strange to have the feature name in domain without it having a coresponding object name, but maybe best to have it only like a namspace to group many objects that implement that high level feature
