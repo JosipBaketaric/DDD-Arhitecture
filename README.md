@@ -6,50 +6,50 @@
 
 # Project/folder structure:
 - Folder for each module named [ProductName].[ModuleName]
-- [ProductName].Domain.[ModuleName] project for each module (bounded context)
-- under it we add folders by feature names
-- here goes the aggeregate root class, entities, events, value objects, domain services, related to the feature and its aggregate roots
-- avoid adding shared folders, but it is allowed (if we need to add to shared, it should make us think if our aggregates are well formed, and also do not overforce the DRY principle)
-- persistance folder for repository interfaces
-- internal contracts for interfaces that communicate with other modules
-- external contracts for interfaces that communicate with external systems
-- [ProductName].Domain.Base project for code common across all bounded contextes
-- IAggregateRoot
-- IEntity
-- IValueObject
-- ...
-- [ProductName].Persistance.[ModuleName] project
-- db scheme name = ModuleName
-- has tables only form it's db scheme
-- class for each table
-- ef configuration mapping for class to table
-- can have views on tables form other modules (think dbcontext has issues if two models import same tables), so it will disable updates on different schema tables, and will be a clear indicator where integration is happening
-- has folder repositories with implementation of it's modules repositories
-- maps class of each table to domain object property
-- can use mappers but maybe no need... don't know how much reusage is there really since this is only for command part
-- has implementation if IUnitOfWork for it's module
-- Migrations folder for migration scripts
-- [ProductName].Application.Command.[ModuleName] project
-- under it we add folders by feature name
-- here goes the applicationService, commands, command results
-- IUnitOfWork
-- security - classes with queries that check access
-- [ProductName].Application.Query.[ModuleName] project
-- under it we add [QueryDescription]Query.cs class for each query
-- [QueryDescription]QueryInput.cs - query input class
-- [ViewDescrittion]View.cs - query resutls class
-- does not use the Domain projects, but uses the Persistance of the module to write queries
-- security - classes with queries that check access - try to write them as queriables that can be part of the content query for better performance
-- [ProductName].API.[ModuleName]
-- under feature name we add controllers with either Query or Command sufix that implement api endpoints and call application.Command or application.Query
-- reuse queryInputs, Views, commands and commandresults from applicationService, don't map to new objects... if needed (eg. these objects can't serialize, than do it on a case by case basis)
-- [ProductName].Internal.[ModuleName]
-- implementation of internal contracts from other modules that depend on this module
-- this is to avoid polluting the domain with other modules needs, and have a clear sense of who depends on this module
-- [ProductName].External.[ModuleName]
-- implementation of interfaces used by this module that communicate to external systems
-- [ProductName].AsyncJobs.[ModuleName] (optional)
-- use to start hangfire and execute async jobs
+  - [ProductName].Domain.[ModuleName] project for each module (bounded context)
+    - under it we add folders by feature names
+    - here goes the aggeregate root class, entities, events, value objects, domain services, related to the feature and its aggregate roots
+    - avoid adding shared folders, but it is allowed (if we need to add to shared, it should make us think if our aggregates are well formed, and also do not overforce the DRY principle)
+    - persistance folder for repository interfaces
+    - internal contracts folder for interfaces that communicate with other modules
+    - external contracts folder for interfaces that communicate with external systems
+  - [ProductName].Domain.Base project for code common across all bounded contextes
+    - IAggregateRoot
+    - IEntity
+    - IValueObject
+    - ...
+  - [ProductName].Persistance.[ModuleName] project
+    - db scheme name = ModuleName
+    - has tables only form it's db scheme
+    - class for each table
+    - ef configuration mapping for class to table
+    - can have views on tables form other modules (think dbcontext has issues if two models import same tables), so it will disable updates on different schema tables, and will be a clear indicator where integration is happening
+    - has folder repositories with implementation of it's modules repositories
+    - maps class of each table to domain object property
+    - can use mappers but maybe no need... don't know how much reusage is there really since this is only for command part
+    - has implementation if IUnitOfWork for it's module
+    - Migrations folder for migration scripts
+  - [ProductName].Application.Command.[ModuleName] project
+    - under it we add folders by feature name
+    - here goes the applicationService, commands, command results
+    - IUnitOfWork
+    - security - classes with queries that check access
+  - [ProductName].Application.Query.[ModuleName] project
+    - under it we add [QueryDescription]Query.cs class for each query
+    - [QueryDescription]QueryInput.cs - query input class
+    - [ViewDescrittion]View.cs - query resutls class
+    - does not use the Domain projects, but uses the Persistance of the module to write queries
+    - security - classes with queries that check access - try to write them as queriables that can be part of the content query for better performance
+  - [ProductName].API.[ModuleName]
+    - under feature name we add controllers with either Query or Command sufix that implement api endpoints and call application.Command or application.Query
+    - reuse queryInputs, Views, commands and commandresults from applicationService, don't map to new objects... if needed (eg. these objects can't serialize, than do it on a case by case basis)
+  - [ProductName].Internal.[ModuleName]
+    - implementation of internal contracts from other modules that depend on this module
+    - this is to avoid polluting the domain with other modules needs, and have a clear sense of who depends on this module
+  - [ProductName].External.[ModuleName]
+    - implementation of interfaces used by this module that communicate to external systems
+  - [ProductName].AsyncJobs.[ModuleName] (optional)
+    - use to start hangfire and execute async jobs
 
 # Guideliness:
 - Try to use small aggregates, better to use two if possible, than one large. Think how many properties of the aggergate does your command really need, if it's just a few, and the aggergate is already heavy, consider creating a new one. Usualy if one command changes one property, the other just read's it, so we can split them, since we won't violate invariant. Of course we prefer to have all actions on the same object, if it's performant :).
