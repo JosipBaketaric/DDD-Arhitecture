@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Logistics/Logistics.Application.Command/bin/Debug/net8.0
+/Logistics/.vs
+/Logistics/Logistics.Application.Command/obj
+/Logistics/Logistics.Domain.Import/bin/Debug/net8.0
+/Logistics/Logistics.Domain.Import/obj
+/.vs/playground/v17
+/.vs
