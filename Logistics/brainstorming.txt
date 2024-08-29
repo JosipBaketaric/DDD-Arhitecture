@@ -32,6 +32,7 @@ ShipmentRouteService.CoverByTransport(ShipmentRoute, Transport)
  - ShipmentRoute.CoverShipmentRoute(Transport) 
 
 ShipmentRoute
+- Create - need service because we need the last routSegmentIndex?!?
 - ConverShipmentRouteByTransport(Transport)	
 	- add transport to shimpentRoute and status to planned
 - RemoveTransport()

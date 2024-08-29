@@ -1,8 +1,8 @@
 ﻿namespace Logistics.Application.Command.Import
 {
-    public class AddShipmentToTransportCommand
+    public class CoverShipmentRouteByTransportCommand
     {
         public int TransportId { get; set; }
-        public int ShipmentId { get; set; }
+        public int ShipmentRouteId { get; set; }
     }
 }

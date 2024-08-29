@@ -16,11 +16,6 @@
             Weight = weight;
             OriginTerminal = originTerminal;
             DestinationTerminal = destinationTerminal;
-        }
-
-        internal void SetTransport(int transportId)
-        {
-            this.transportId = transportId;
-        }
+        }        
     }
 }
