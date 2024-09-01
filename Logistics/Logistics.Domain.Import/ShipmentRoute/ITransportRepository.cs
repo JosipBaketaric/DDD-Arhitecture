@@ -3,5 +3,6 @@
     public interface ITransportRepository
     {
         Transport Get(int id);
+        void Update(Transport transport);
     }
 }

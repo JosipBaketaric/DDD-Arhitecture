@@ -7,5 +7,9 @@
 /Logistics/Logistics.Application.Command/obj
 /Logistics/Logistics.Domain.Import/bin/Debug/net8.0
 /Logistics/Logistics.Domain.Import/obj
+/Logistics/Logistics.Domain.Base/bin/Debug/net8.0
+/Logistics/Logistics.Domain.Base/obj
+/Logistics/Logistics.Test.CA/bin/Debug/net8.0
+/Logistics/Logistics.Test.CA/obj
 /.vs/playground/v17
 /.vs

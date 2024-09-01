@@ -15,13 +15,13 @@ namespace Logistics.Domain.Import.ShipmentRoute
             transportId = transport.Id;
             status = ShipmentRouteStatus.Assigned;
         }
+
+        internal void ArrivedOnLocation(Location location) {
+            if(to == location) {
+                status = ShipmentRouteStatus.Done;
+            }
+        }
     }
 
-    internal enum ShipmentRouteStatus
-    {
-        Unassigned,
-        Assigned,
-        InProgress,
-        Done
-    }
+    
 }
