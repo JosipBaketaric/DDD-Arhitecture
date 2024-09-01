@@ -1,5 +1,8 @@
-﻿using Logistics.Domain.Base;
+﻿using Logistics.Application.Command.Import;
+using Logistics.Domain.Base;
 using Logistics.Domain.Import.ShipmentRoute;
+using Logistics.Persistance.Import;
+using Logistics.Persistance.Import.ShipmentRoute;
 using Microsoft.Extensions.DependencyInjection;
 public class Program
 {
@@ -13,18 +16,28 @@ public class Program
         // Build the service provider
         var serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var transport = new Transport();
-        transport.StatusChange();
+        var shipmentRouteDomainService = new ShipmentRouteService(serviceProvider.GetService<IShipmentRouteRepository>());        
 
-        var dispatcher = new DomainEventDispatcher(serviceProvider);
+        var appService = new ShipmentRouteAppService(
+            serviceProvider.GetService<ITransportRepository>(),
+            serviceProvider.GetService<IShipmentRouteRepository>(),
+            shipmentRouteDomainService,
+            serviceProvider.GetService<IUnitOfWork>()
+        );
 
-        foreach(var domainEvent in transport.GetDomainEvents()) {
-            dispatcher.Dispatch(domainEvent);
-        }
+        appService.ChangeTransportStatus(new ChangeTransportStatusCommand());
+
+        
+
+        
     }
 
     private static void ConfigureServices(IServiceCollection services)
     {        
+        services.AddTransient<IShipmentRouteRepository, ShipmentRouteRepository>();
+        services.AddTransient<ITransportRepository, TransportRepository>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        
         services.AddTransient<IDomainEventHandler<TransportStatusChangedDomainEvent>, TransportStatusChangedDomainEventHandler>();
         
         services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();

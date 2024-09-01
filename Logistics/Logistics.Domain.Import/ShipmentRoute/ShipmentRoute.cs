@@ -1,6 +1,8 @@
+using Logistics.Domain.Base;
+
 namespace Logistics.Domain.Import.ShipmentRoute
 {
-    public class ShipmentRoute
+    public class ShipmentRoute: Aggregate
     {
         internal int ShipmentId {get; private set;}
         internal int ShipmentMass {get; private set;}

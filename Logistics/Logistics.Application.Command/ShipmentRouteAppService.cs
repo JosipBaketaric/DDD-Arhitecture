@@ -7,20 +7,17 @@ namespace Logistics.Application.Command.Import
         private readonly ITransportRepository transportRepository;
         private readonly IShipmentRouteRepository shipmentRouteRepository;
         private readonly ShipmentRouteService shipmentRouteService;
-        private readonly TransportStatusService transportStatusService;
         private readonly IUnitOfWork unitOfWork;
         public ShipmentRouteAppService(
             ITransportRepository transportRepository, 
             IShipmentRouteRepository shipmentRouteRepository, 
             ShipmentRouteService shipmentRouteService,
-            TransportStatusService transportStatusService,
             IUnitOfWork unitOfWork)
         {
             this.transportRepository = transportRepository;
             this.shipmentRouteRepository = shipmentRouteRepository;
             this.shipmentRouteService = shipmentRouteService;
-            this.unitOfWork = unitOfWork;
-            this.transportStatusService = transportStatusService;
+            this.unitOfWork = unitOfWork;        
         }
 
         public void AddShipmentToTransport(CoverShipmentRouteByTransportCommand coverShipmentRouteByTransportCommand)
@@ -37,13 +34,19 @@ namespace Logistics.Application.Command.Import
 
         public void ChangeTransportStatus(ChangeTransportStatusCommand changeTransportStatusCommand)
         {
+            Console.WriteLine("App service started");
+
             var transport = transportRepository.Get(changeTransportStatusCommand.TransportId);
-            var transportShipmentRoutes = shipmentRouteRepository.GetShipmentRoutesForTransport(changeTransportStatusCommand.TransportId);
 
-            transportStatusService.ChangeTransportStatus(transport, changeTransportStatusCommand.TransportStatus);
+            Console.WriteLine("Call status change");
+            
+            transport.StatusChange();
 
+            Console.WriteLine("Status changed app service");
+            
             transportRepository.Update(transport);
 
+            unitOfWork.Commit();
         }
     }
 }

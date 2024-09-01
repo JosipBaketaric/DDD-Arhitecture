@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Logistics.Domain.Import\Logistics.Domain.Import.csproj" />
+    <ProjectReference Include="..\Logistics.Application.Command\Logistics.Application.Command.Import.csproj" />
+    <ProjectReference Include="..\Logistics.Persistance.Import\Logistics.Persistance.Import.csproj" />
   </ItemGroup>
 
 </Project>

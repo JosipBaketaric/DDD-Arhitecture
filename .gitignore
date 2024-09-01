@@ -11,5 +11,7 @@
 /Logistics/Logistics.Domain.Base/obj
 /Logistics/Logistics.Test.CA/bin/Debug/net8.0
 /Logistics/Logistics.Test.CA/obj
+/Logistics/Logistics.Persistance.Import/bin/Debug/net8.0
+/Logistics/Logistics.Persistance.Import/obj
 /.vs/playground/v17
 /.vs
