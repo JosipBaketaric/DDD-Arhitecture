@@ -2,7 +2,13 @@
 {
     public class CoverShipmentRouteByTransportCommand
     {
-        public int TransportId { get; set; }
-        public int ShipmentRouteId { get; set; }
+        public int TransportId { get; private set; }
+        public int ShipmentRouteId { get; private set; }
+
+        public CoverShipmentRouteByTransportCommand(int transportId, int shipmentRouteId)
+        {
+            TransportId = transportId;
+            ShipmentRouteId = shipmentRouteId;
+        }
     }
 }

@@ -9,6 +9,9 @@ public class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Main started");
+
+        InMemoryDbContext.SetupData();
+
         // Set up the DI container
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
@@ -25,11 +28,11 @@ public class Program
             serviceProvider.GetService<IUnitOfWork>()
         );
 
-        appService.ChangeTransportStatus(new ChangeTransportStatusCommand());
+        appService.AddShipmentToTransport(new CoverShipmentRouteByTransportCommand(1,1));
 
-        
+        appService.ChangeTransportStatus(new ChangeTransportStatusCommand(1, 2, new Logistics.Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 2")));
 
-        
+        Console.ReadLine();                
     }
 
     private static void ConfigureServices(IServiceCollection services)

@@ -40,7 +40,7 @@ namespace Logistics.Application.Command.Import
 
             Console.WriteLine("Call status change");
             
-            transport.StatusChange();
+            transport.ArriveOnTerminal(changeTransportStatusCommand.Location);
 
             Console.WriteLine("Status changed app service");
             

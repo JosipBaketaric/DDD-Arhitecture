@@ -8,8 +8,12 @@ public class TransportStatusChangedDomainEvent: IDomainEvent
     public int TransportId { get; private set; }
     public int TransportStatusId {get; private set;}
 
-    public TransportStatusChangedDomainEvent(int transportId, int transportStatusId) {
+    public Location Location { get; private set;}
+
+    public TransportStatusChangedDomainEvent(int transportId, int transportStatusId, Location location)
+    {
         TransportId = transportId;
         TransportStatusId = transportStatusId;
+        Location = location;
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Logistics.Application.Command.Import;
 using Logistics.Domain.Base;
 
@@ -22,5 +21,7 @@ public class UnitOfWork : IUnitOfWork
         foreach(var domainEvent in InMemoryDbContext.Aggregates.SelectMany(x => x.GetDomainEvents())) {
             dispatcher.Dispatch(domainEvent);
         }
+
+        Console.WriteLine("Commit");
     }
 }

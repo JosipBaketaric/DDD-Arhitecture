@@ -8,14 +8,12 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
 {
     public Domain.Import.ShipmentRoute.ShipmentRoute Get(int shipmentRouteId)
     {
-        return new Domain.Import.ShipmentRoute.ShipmentRoute();
+        return InMemoryDbContext.Aggregates.OfType<Domain.Import.ShipmentRoute.ShipmentRoute>().FirstOrDefault(x => x.ShipmentId == shipmentRouteId);
     }
 
     public IEnumerable<Domain.Import.ShipmentRoute.ShipmentRoute> GetShipmentRoutesForTransport(int transportId)
     {
-        var list = new List<Domain.Import.ShipmentRoute.ShipmentRoute>();
-        list.Add(new Domain.Import.ShipmentRoute.ShipmentRoute());
-        return list;
+        return InMemoryDbContext.Aggregates.OfType<Domain.Import.ShipmentRoute.ShipmentRoute>().Where(x => x.TransportId == transportId);
     }
 
     public bool IsTransportOnShipmentRoute(int shipmentId, int transportId)
@@ -25,6 +23,6 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
 
     public void Update(Domain.Import.ShipmentRoute.ShipmentRoute shipmentRoute)
     {
-        InMemoryDbContext.AddData(shipmentRoute);
+        
     }
 }
