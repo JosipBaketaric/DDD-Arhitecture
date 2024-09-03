@@ -81,20 +81,40 @@ ShipmentProcess
 
 Scenario import - warehouse - distribution
 - import insert 
-	- import proces entry
-	- if warehouse - warehouse entry (warehouse from warehouse terminal on shipment)
-	- if destination in hr and not warehouse distribution - entry
+	- import proces "entry"
+	- if warehouse - warehouse "entry" (warehouse from warehouse terminal on shipment)
+	- if destination in hr and not warehouse distribution - "entry"
 	- import route - origin - warehouse
 	- destination route - warehouse - destinaton
 - import transport insert
-	- transport entry
+	- transport "entry"
 - import add shipment to transport
-	- import process status organized
-- import transport status change "On transport"
+	- import process status "organized"
+- import transport status change "Transporting"
+	- import process status to "On Transport"
 - import transport status change "ArrivedOnTerminal"
-	- if terminal warehouse and warehouse entry - warehouse ready for receive
-	- if distribution 
-		- if terminal = distribution.from
-			if warehouseReceiving than WarehouseReceiving
-			else OnTerminal
+	- each shipment with route on transport and destination as terminal to done
+		- if terminal = import.destination than "On terminal"
+		- if terminal warehouse and warehouse entry - warehouse "ready for receive"
+		- if distribution 
+			- if terminal = distribution.from
+				if warehouseReceiving than "Warehouse ready to receive"
+				else "OnTerminal"
+- warehouse receiving status changes
+	- propagate to deistirbution
+- distribution insert transport 
+	- "entry"
+- distribution add shipment to transport
+	- distribution "organized"
+	- start warehouseShipping "entry"
+- warehouse transport to "OnTerminal"
+	- if terminal == warhouseShipping.warehouse than warehouseShipping to "waiting on shipping"
+	- if terminal == distribution.StartTerminal and distribution = organized than 
+		if warehouseshipping than "warhouseShipping
+		else "OnTerminal"
+- warehouseshipping 
+	- update statuses on distribution
+- warehouse transport to "Driving"
+- shipment.distribution to "Delivered"
+	- import "Delivered"
 	
