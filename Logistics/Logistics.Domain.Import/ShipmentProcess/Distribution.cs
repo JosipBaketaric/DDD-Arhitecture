@@ -8,14 +8,16 @@ namespace Logistics.Domain.Import.ShipmentProcess
 {
     public class Distribution
     {
-        private int ShipmentProcessId;
+        private Guid ShipmentProcessId;
         private DistributionStatus StatusId;
+        private Location Origin;
         private Location Destination;        
 
-        public Distribution(int shipmentProcessId, DistributionStatus statusId, Location destination)
+        public Distribution(Guid shipmentProcessId, DistributionStatus statusId, Location origin, Location destination)
         {
             ShipmentProcessId = shipmentProcessId;
             StatusId = statusId;
+            Origin = origin;
             Destination = destination;
         }
         internal void ShipmentArrivedOnTerminal(Location terminal, WarehouseReceivingStatus? warehouseReceivingStatus)

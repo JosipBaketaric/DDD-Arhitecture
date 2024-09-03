@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,25 +10,29 @@ namespace Logistics.Domain.Import.ShipmentProcess
 {
     public class Shipment: Aggregate
     {
-        private int ShipmentId;
+        private Guid ShipmentId;
         private Import Import;
         private WarehouseReceiving WarehouseReceiving;
         private Distribution Distribution;
 
-        public Shipment(int shipmentId, 
-            int? importProcessId, 
+        public Shipment(Guid shipmentId, 
+            Location ShipmentOrigin,
+            Location shipmentDestination,
+            Guid? importProcessId, 
             ImportStatus? importStatus, 
-            int? warehouseReceivingProcessId, 
+            Location? importDestination,
+            Guid? warehouseReceivingProcessId, 
             WarehouseReceivingStatus? warehouseReceivingStatus,
             Location? warehouseTerminal,
-            int? distributionProcessId,
+            Guid? distributionProcessId,
             DistributionStatus? distributionStatus,
-            Location? distributionTerminal)
+            Location? distributionOriginTerminal,
+            Location? distributionDestinationTerminal)
         {
             ShipmentId = shipmentId;
             if(importProcessId.HasValue)
             {
-                Import = new Import(importProcessId.Value, importStatus.Value);
+                Import = new Import(importProcessId.Value, importStatus.Value, ShipmentOrigin, importDestination);
             }
             if(warehouseReceivingProcessId.HasValue)
             {
@@ -35,8 +40,35 @@ namespace Logistics.Domain.Import.ShipmentProcess
             }
             if(distributionProcessId.HasValue)
             {
-                Distribution = new Distribution(distributionProcessId.Value, distributionStatus.Value, distributionTerminal);
+                Distribution = new Distribution(distributionProcessId.Value, distributionStatus.Value, distributionOriginTerminal, distributionDestinationTerminal);
             }            
+        }
+
+        public static Shipment CreateShipmentFromImport(
+            Location shipmentOrigin,
+            Location shipmentDestination,
+            Location? importDestination,
+            bool usesWarehouse
+        ) {
+            bool hasDistribution = false;
+            if(shipmentDestination.Country == "HR") {
+                hasDistribution = true;
+            }
+
+            return new Shipment(
+                Guid.NewGuid(),
+                shipmentOrigin,
+                shipmentDestination,
+                Guid.NewGuid(),
+                ImportStatus.Entry,
+                importDestination,
+                usesWarehouse ? Guid.NewGuid() : null,
+                usesWarehouse ? WarehouseReceivingStatus._201 : null,
+                usesWarehouse ? importDestination : null,
+                hasDistribution ? Guid.NewGuid() : null,
+                hasDistribution ? DistributionStatus.EntryInProgress : null,
+                hasDistribution ? importDestination : null,
+                hasDistribution ? shipmentDestination : null);
         }        
         public void ImportStatusChange(ImportStatus importStatus, Location location)
         {

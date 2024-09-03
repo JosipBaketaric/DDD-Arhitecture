@@ -8,11 +8,11 @@ namespace Logistics.Domain.Import.ShipmentProcess
 {
     public class WarehouseReceiving
     {
-        private int ShipmentProcessId;
+        private Guid ShipmentProcessId;
         internal WarehouseReceivingStatus StatusId { get; private set; }
         private Location WarehouseTerminal;
 
-        public WarehouseReceiving(int shipmentProcessId, WarehouseReceivingStatus statusId, Location warehouseTerminal)
+        public WarehouseReceiving(Guid shipmentProcessId, WarehouseReceivingStatus statusId, Location warehouseTerminal)
         {
             ShipmentProcessId = shipmentProcessId;
             StatusId = statusId;

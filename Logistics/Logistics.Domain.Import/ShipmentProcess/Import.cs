@@ -8,26 +8,23 @@ namespace Logistics.Domain.Import.ShipmentProcess
 {
     public class Import
     {
-        private int ShipmentProcessId;
-        private ImportStatus StatusId;
+        private Guid ShipmentProcessId;
+        private ImportStatus StatusId = ImportStatus.Entry;
+        private Location Origin;
         private Location Destination;
-        private Location ShipmentDestination;
-
-        public Import(int shipmentProcessId, ImportStatus statusId, Location destination)
+        
+        public Import(Guid shipmentProcessId, ImportStatus statusId, Location origin, Location destination)
         {
             ShipmentProcessId = shipmentProcessId;
             StatusId = statusId;
+            Origin = origin;
             Destination = destination;
         }
-
+        
         internal void ShipmentArrivedOnTerminal(Location terminal)
         {
             if(Destination == terminal && StatusId == ImportStatus.Organized)
             {
-                if(terminal == ShipmentDestination)
-                {
-                    StatusId = ImportStatus.Delivered;
-                }
                 StatusId = ImportStatus.OnTerminal;
             }
         }

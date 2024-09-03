@@ -10,7 +10,7 @@ namespace Logistics.Domain.Import.ShipmentProcess
     public enum ImportStatus
     {
         [Description("301")]
-        EntryInProgress,        
+        Entry,
         [Description("302")]
         Organized,
         [Description("303")]
