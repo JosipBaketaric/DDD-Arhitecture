@@ -77,4 +77,24 @@ ShipmentProcess
 				- if distribution than distirbution.ArriveOnTermina(terminal, warehouseStatus)
 					if terminal and warehouseReceiving than WarehouseReceiving
 						else OnTerminal
-				
+
+
+Scenario import - warehouse - distribution
+- import insert 
+	- import proces entry
+	- if warehouse - warehouse entry (warehouse from warehouse terminal on shipment)
+	- if destination in hr and not warehouse distribution - entry
+	- import route - origin - warehouse
+	- destination route - warehouse - destinaton
+- import transport insert
+	- transport entry
+- import add shipment to transport
+	- import process status organized
+- import transport status change "On transport"
+- import transport status change "ArrivedOnTerminal"
+	- if terminal warehouse and warehouse entry - warehouse ready for receive
+	- if distribution 
+		- if terminal = distribution.from
+			if warehouseReceiving than WarehouseReceiving
+			else OnTerminal
+	
