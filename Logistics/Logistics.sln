@@ -5,13 +5,19 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistics.Domain.Import", "Logistics.Domain.Import\Logistics.Domain.Import.csproj", "{069448DD-87B2-4D58-81B9-FF94267C74AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistics.Application.Command.Import", "Logistics.Application.Command\Logistics.Application.Command.Import.csproj", "{513A7E29-532E-4F21-8DB6-6D3622A1C943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistics.Application.Command.Import", "Logistics.Application.Command\Logistics.Application.Command.Import.csproj", "{513A7E29-532E-4F21-8DB6-6D3622A1C943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistics.Domain.Base", "Logistics.Domain.Base\Logistics.Domain.Base.csproj", "{FB616B80-D209-4F50-A6EB-9D28DCEEAA7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistics.Domain.Base", "Logistics.Domain.Base\Logistics.Domain.Base.csproj", "{FB616B80-D209-4F50-A6EB-9D28DCEEAA7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistics.Test.CA", "Logistics.Test.CA\Logistics.Test.CA.csproj", "{45FF1AE7-5242-40BB-92B7-5574C5DBBAF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistics.Test.CA", "Logistics.Test.CA\Logistics.Test.CA.csproj", "{45FF1AE7-5242-40BB-92B7-5574C5DBBAF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistics.Persistance.Import", "Logistics.Persistance.Import\Logistics.Persistance.Import.csproj", "{F26E3DDB-F089-4D5F-916A-05B971254169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistics.Persistance.Import", "Logistics.Persistance.Import\Logistics.Persistance.Import.csproj", "{F26E3DDB-F089-4D5F-916A-05B971254169}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{635F6990-042B-4CB0-97DD-483AF1AA7601}"
+	ProjectSection(SolutionItems) = preProject
+		brainstorming.txt = brainstorming.txt
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -74,7 +74,7 @@
 - create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
 
 # Questions:
-- IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... think we don't need it in domain, right?
+- IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... we don't need it in domain but where is it implemented, in persistance or in app layer?
 - transaction accross modules with different UnitsOfWork on each module wrapped in transaction?
 - feature name is the application service (without the service part) name also maybe equals to aggreget root? Strange to have the feature name in domain without it having a coresponding object name, but maybe best to have it only like a namspace to group many objects that implement that high level feature
 - in application layer we use application services... we could use the command handlers instead, and mediator so the caller does not need to know which app service to call, it can just send the command... but seems to add complexity for no reason, or does it?
