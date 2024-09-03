@@ -65,3 +65,16 @@ TransportArrival
 	- for each ShipmentRoute.Arrived(Location)
 - List<ShipmentRoute>
 	
+	
+	
+ShipmentProcess
+- Transport.Import.ArrivedOnTerminal(Terminal)
+	- ShipmentRoute - Done
+		- ShipmentProcess.Import.ArrivedOnTerminal(Terminal) if Terminal == Ship.Destination than delivered else OnTerminal
+			- If Import.Delivered than
+				- if warehouse than warehouse.ArrivedOnTerminal(terminal)
+					if terminal and status prepared than WarehouseReceiving					
+				- if distribution than distirbution.ArriveOnTermina(terminal, warehouseStatus)
+					if terminal and warehouseReceiving than WarehouseReceiving
+						else OnTerminal
+				
