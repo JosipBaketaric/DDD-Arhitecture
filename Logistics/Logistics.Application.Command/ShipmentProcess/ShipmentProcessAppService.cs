@@ -7,22 +7,35 @@ namespace Logistics.Application.Command.Import.ShipmentProcess
     public class ShipmentProcessAppService
     {
         private readonly IShipmentRepository shipmentRepository;
+        private readonly IShipmentRouteRepository shipmentRouteRepository;
+        private readonly CreateShipmentDomainService createShipmentDomainService;
         private readonly IUnitOfWork unitOfWork;
-        public ShipmentProcessAppService(IShipmentRepository shipmentRepository, IUnitOfWork unitOfWork)
+        public ShipmentProcessAppService(IShipmentRepository shipmentRepository, IUnitOfWork unitOfWork, CreateShipmentDomainService createShipmentDomainService, IShipmentRouteRepository shipmentRouteRepository)
         {
             this.shipmentRepository = shipmentRepository;
             this.unitOfWork = unitOfWork;
+            this.createShipmentDomainService = createShipmentDomainService;
+            this.shipmentRouteRepository = shipmentRouteRepository;
         }
 
-        public Guid CreateShipmentFromImport(CreateShipmentFromImportCommand command)
+        public (Guid, List<Guid>) CreateShipmentFromImport(CreateShipmentFromImportCommand command)
         {
-            var shipment = new Shipment(command.Mass, command.ShipmentOrigin, command.ShipmentDestination, command.ImportDestination, command.UseWarehouse);
+            var shipmentAndShipmentRoutes = createShipmentDomainService.CreateShipmentInImport(
+                command.Mass, 
+                command.ShipmentOrigin, 
+                command.ShipmentDestination, 
+                command.ImportDestination, 
+                command.UseWarehouse);
 
-            shipmentRepository.Add(shipment);
+            shipmentRepository.Add(shipmentAndShipmentRoutes.Item1);
+            foreach(var shipmentRoute in shipmentAndShipmentRoutes.Item2)
+            {
+                shipmentRouteRepository.Add(shipmentRoute);
+            }   
 
             unitOfWork.Commit();
 
-            return shipment.ShipmentId;
+            return (shipmentAndShipmentRoutes.Item1.ShipmentId, shipmentAndShipmentRoutes.Item2.Select(x => x.ShipmentRouteId).ToList());
         }     
         
         public void ChangeImportStatus(ChangeImportStatusCommand command)

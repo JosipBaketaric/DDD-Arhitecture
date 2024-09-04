@@ -20,6 +20,14 @@ namespace Logistics.Application.Command.Import
             this.unitOfWork = unitOfWork;        
         }
 
+        public Guid CreateTransport(CreateTransportCommand command)
+        {
+            var transport = new Transport(command.MaxMass, command.Destination);
+            transportRepository.Add(transport);
+            unitOfWork.Commit();
+            return transport.Id;
+        }
+
         public void AddShipmentToTransport(CoverShipmentRouteByTransportCommand coverShipmentRouteByTransportCommand)
         {
             var transport = transportRepository.Get(coverShipmentRouteByTransportCommand.TransportId);
@@ -32,18 +40,12 @@ namespace Logistics.Application.Command.Import
             unitOfWork.Commit();
         }
 
-        public void ChangeTransportStatus(ChangeTransportStatusCommand changeTransportStatusCommand)
+        public void ChangeTransportStatus(ChangeTransportStatusCommand command)
         {
-            Console.WriteLine("App service started");
-
-            var transport = transportRepository.Get(changeTransportStatusCommand.TransportId);
-
-            Console.WriteLine("Call status change");
-            
-            transport.ArriveOnTerminal(changeTransportStatusCommand.Location);
-
-            Console.WriteLine("Status changed app service");
-            
+            var transport = transportRepository.Get(command.TransportId);
+                        
+            transport.ChangeStatus(command.TransportStatus, command.StatusLocation);
+                        
             transportRepository.Update(transport);
 
             unitOfWork.Commit();

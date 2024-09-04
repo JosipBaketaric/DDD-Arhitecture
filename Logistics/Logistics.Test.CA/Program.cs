@@ -20,56 +20,62 @@ public class Program
 
         // Build the service provider
         var serviceProvider = serviceCollection.BuildServiceProvider();
-        
+
         //AddShipmentToTransport(serviceProvider);
-        CreateShipment(serviceProvider);
+        Scenario1(serviceProvider);
 
         Console.ReadLine();
-    }
+    }   
 
-    private static void AddShipmentToTransport(ServiceProvider serviceProvider)
+    private static void Scenario1(ServiceProvider serviceProvider)
     {
-        InMemoryDbContext.SetupData();
+        // service initialization
+        var createShipmentDomainService = new CreateShipmentDomainService();
+        var shipmentProcessAppService = new ShipmentProcessAppService(
+            serviceProvider.GetService<IShipmentRepository>(),
+            serviceProvider.GetService<IUnitOfWork>(),
+            createShipmentDomainService,
+            serviceProvider.GetService<IShipmentRouteRepository>()
+            );
 
         var shipmentRouteDomainService = new ShipmentRouteService(serviceProvider.GetService<IShipmentRouteRepository>());
 
-        var appService = new ShipmentRouteAppService(
+        var shipmentRouteAppService = new ShipmentRouteAppService(
             serviceProvider.GetService<ITransportRepository>(),
             serviceProvider.GetService<IShipmentRouteRepository>(),
             shipmentRouteDomainService,
             serviceProvider.GetService<IUnitOfWork>()
         );
 
-        appService.AddShipmentToTransport(new CoverShipmentRouteByTransportCommand(1, Guid.NewGuid()));
+        // scenario start
+        var warehouseTerminal = new Location("HR", "Split", "21000", "Terminal 2");
 
-        appService.ChangeTransportStatus(new ChangeTransportStatusCommand(1, 2, new Logistics.Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 2")));
-    }
-
-    private static void CreateShipment(ServiceProvider serviceProvider)
-    {
-        var shipmentProcessAppService = new ShipmentProcessAppService(
-            serviceProvider.GetService<IShipmentRepository>(),
-            serviceProvider.GetService<IUnitOfWork>());
-
-        var warehouseTerminal = new Logistics.Domain.Import.Location("HR", "Split", "21000", "Terminal 2");
-
-        var shipmentId = shipmentProcessAppService.CreateShipmentFromImport(new CreateShipmentFromImportCommand(
+        var shipmentAndShipmentRouteIds = shipmentProcessAppService.CreateShipmentFromImport(new CreateShipmentFromImportCommand(
             100,
-            new Logistics.Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 1"),
+            new Location("HR", "Zagreb", "10000", "Terminal 1"),
+            new Location("HR", "Split", "21000", "Terminal 3"),
             warehouseTerminal,
-            new Logistics.Domain.Import.Location("HR", "Split", "21000", "Terminal 3"),
             true));
 
+        var transportId = shipmentRouteAppService.CreateTransport(new CreateTransportCommand(100, warehouseTerminal));
+
+        var shipmentId = shipmentAndShipmentRouteIds.Item1;
+        var importShipmentRouteId = shipmentAndShipmentRouteIds.Item2[0];
+
         shipmentProcessAppService.ChangeImportStatus(new ChangeImportStatusCommand(shipmentId, ImportStatus.Organized, null));
+
+        shipmentRouteAppService.ChangeTransportStatus(new ChangeTransportStatusCommand(transportId, TransportStatus.Organized, null));
+
+        shipmentRouteAppService.AddShipmentToTransport(new CoverShipmentRouteByTransportCommand(transportId, importShipmentRouteId));        
 
         shipmentProcessAppService.ChangeWarehouseReceivingStatus(new ChangeWarehouseReceivingCommand(shipmentId, WarehouseReceivingStatus.ReadyForLoading, null));
 
         shipmentProcessAppService.ChangeDistributionStatus(new ChangeDistributionStatusCommand(shipmentId, DistributionStatus.Organized, null));
 
-        shipmentProcessAppService.ChangeImportStatus(new ChangeImportStatusCommand(shipmentId, ImportStatus.OnTransport, null));
+        shipmentRouteAppService.ChangeTransportStatus(new ChangeTransportStatusCommand(transportId, TransportStatus.Driving, null));
 
-        shipmentProcessAppService.ChangeImportStatus(new ChangeImportStatusCommand(shipmentId, ImportStatus.OnTerminal, warehouseTerminal));
-
+        shipmentRouteAppService.ChangeTransportStatus(new ChangeTransportStatusCommand(transportId, TransportStatus.OnTerminal, warehouseTerminal));
+                
         foreach (var aggregate in InMemoryDbContext.Aggregates)
         {
             Console.WriteLine("Aggregate: {0}", aggregate.GetType().Name);
@@ -84,7 +90,7 @@ public class Program
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         
         services.AddTransient<IDomainEventHandler<TransportStatusChangedDomainEvent>, TransportStatusChangedDomainEventHandler>();
-        services.AddTransient<IDomainEventHandler<ShipmentCreatedDomainEvent>, ShipmentCreatedDomainEventHandler>();
+        services.AddTransient<IDomainEventHandler<ShipmentRouteDoneDomainEvent>, ShipmentRouteDoneDomainEventHandler>();
 
         services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
     }

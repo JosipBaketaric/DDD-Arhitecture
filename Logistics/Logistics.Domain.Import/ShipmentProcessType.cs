@@ -1,4 +1,4 @@
-﻿namespace Logistics.Domain.Import.ShipmentProcess
+﻿namespace Logistics.Domain.Import
 {
     public enum ShipmentProcessType
     {

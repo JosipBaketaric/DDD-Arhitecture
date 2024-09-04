@@ -2,7 +2,8 @@
 {
     public interface ITransportRepository
     {
-        Transport Get(int id);
+        Transport Get(Guid id);
         void Update(Transport transport);
+        void Add(Transport transport);
     }
 }

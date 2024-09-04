@@ -5,15 +5,15 @@ namespace Logistics.Domain.Import.ShipmentRoute;
 
 public class TransportStatusChangedDomainEvent: IDomainEvent
 {
-    public int TransportId { get; private set; }
-    public int TransportStatusId {get; private set;}
+    public Guid TransportId { get; private set; }
+    public TransportStatus TransportStatus {get; private set; }
 
     public Location Location { get; private set;}
 
-    public TransportStatusChangedDomainEvent(int transportId, int transportStatusId, Location location)
+    public TransportStatusChangedDomainEvent(Guid transportId, TransportStatus transportStatus, Location location)
     {
         TransportId = transportId;
-        TransportStatusId = transportStatusId;
+        TransportStatus = transportStatus;
         Location = location;
     }
 }

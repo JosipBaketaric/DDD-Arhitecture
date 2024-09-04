@@ -85,4 +85,5 @@
 - use domain events for cross bounded context communication? how? how is it different from using interfaces? hangfire fro eventual consistency scenarios? event handlers outside of transaction through async jobs only?
 - example code of what goes to app service vs what goes to domain service
 - aggregate story - each method (or a small number of them) in it's own interface, than with implementation on class, instead of adding a method directly on a class, so we can end up with one class with many interface implementations. Than we only use the interface where we need, and could potentionally have a repository for each interface to just fill the part of the aggregate needed for that interface. Needs adidtional research, but sounds like we would still have a partially loadaded aggregate and enforcing invariants would be questionable right?
-- guids or int for id's? App code can generate guids and they are unique, so switching id's between entities failes, while int's take less space and are more readable
+- guids or int for id's? App code can generate guids and they are unique, so switching id's between entities failes, while int's take less space and are more readable. Can Guid.NewGuid() be used in aggregate?
+- undescore for private class variables?

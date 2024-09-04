@@ -58,7 +58,7 @@ namespace Logistics.Domain.Import.ShipmentProcess
             }            
         }        
 
-        public Shipment(
+        internal Shipment(
             int mass,
             Location shipmentOrigin,
             Location? importDestination,
