@@ -15,13 +15,28 @@ public class UnitOfWork : IUnitOfWork
 
     public void Commit()
     {
-        var dispatcher = new DomainEventDispatcher(_serviceProvider);
-
-
-        foreach(var domainEvent in InMemoryDbContext.Aggregates.SelectMany(x => x.GetDomainEvents())) {
-            dispatcher.Dispatch(domainEvent);
-        }
+        HandleEvents();       
 
         Console.WriteLine("Commit");
+    }
+
+    private void HandleEvents()
+    {
+        var dispatcher = new DomainEventDispatcher(_serviceProvider);
+
+        var domainEvents = InMemoryDbContext.Aggregates.SelectMany(x => x.GetDomainEvents()).ToList();
+        foreach(var aggregate in InMemoryDbContext.Aggregates)
+        {
+            aggregate.ClearDomainEvents();
+        }
+        foreach (var domainEvent in domainEvents)
+        {
+            dispatcher.Dispatch(domainEvent);
+        }
+        // events can add more aggregates with their events
+        if(InMemoryDbContext.Aggregates.Any(x => x.GetDomainEvents().Any()))
+        {
+            HandleEvents();
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace Logistics.Domain.Import.ShipmentRoute
 {
     public class ShipmentRoute: Aggregate
     {
-        public int ShipmentId {get; private set;}
+        public Guid ShipmentId {get; private set;}
         internal int ShipmentMass {get; private set;}
         public int TransportId { get; private set; }
         private Location from;
@@ -12,7 +12,7 @@ namespace Logistics.Domain.Import.ShipmentRoute
         private int routeSegmentIndex;
         private ShipmentRouteStatus status = ShipmentRouteStatus.Unassigned;        
 
-        public ShipmentRoute(int shipmentId, int shipmentMass, Location from, Location to, int routeSegmentIndex)
+        public ShipmentRoute(Guid shipmentId, int shipmentMass, Location from, Location to, int routeSegmentIndex)
         {
             ShipmentId = shipmentId;
             ShipmentMass = shipmentMass;

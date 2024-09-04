@@ -1,21 +1,34 @@
 ﻿using Logistics.Domain.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logistics.Domain.Import.ShipmentProcess
 {
-    public class Shipment: Aggregate
+    public class Shipment : Aggregate
     {
-        private Guid ShipmentId;
-        private Import Import;
-        private WarehouseReceiving WarehouseReceiving;
-        private Distribution Distribution;
+        public Guid ShipmentId { get; private set; }
+        internal Import Import { get; private set; }
+        internal WarehouseReceiving WarehouseReceiving { get; private set; }
+        internal Distribution Distribution { get; private set; }
+        internal int Mass { get; private set; }
+        public Shipment(Guid shipmentId,
+            int mass,
+            Location ShipmentOrigin,
+            Location shipmentDestination,
+            Guid? importProcessId,
+            ImportStatus? importStatus,
+            Location? importDestination,
+            Guid? warehouseReceivingProcessId,
+            WarehouseReceivingStatus? warehouseReceivingStatus,
+            Location? warehouseTerminal,
+            Guid? distributionProcessId,
+            DistributionStatus? distributionStatus,
+            Location? distributionOriginTerminal,
+            Location? distributionDestinationTerminal)
+        {            
+            Construct(shipmentId, mass, ShipmentOrigin, shipmentDestination, importProcessId, importStatus, importDestination, warehouseReceivingProcessId, warehouseReceivingStatus, warehouseTerminal, distributionProcessId, distributionStatus, distributionOriginTerminal, distributionDestinationTerminal);
+        }
 
-        public Shipment(Guid shipmentId, 
+        private void Construct(Guid shipmentId, 
+            int mass,
             Location ShipmentOrigin,
             Location shipmentDestination,
             Guid? importProcessId, 
@@ -30,6 +43,7 @@ namespace Logistics.Domain.Import.ShipmentProcess
             Location? distributionDestinationTerminal)
         {
             ShipmentId = shipmentId;
+            Mass = mass;
             if(importProcessId.HasValue)
             {
                 Import = new Import(importProcessId.Value, importStatus.Value, ShipmentOrigin, importDestination);
@@ -42,12 +56,13 @@ namespace Logistics.Domain.Import.ShipmentProcess
             {
                 Distribution = new Distribution(distributionProcessId.Value, distributionStatus.Value, distributionOriginTerminal, distributionDestinationTerminal);
             }            
-        }
+        }        
 
-        public static Shipment CreateShipmentFromImport(
+        public Shipment(
+            int mass,
             Location shipmentOrigin,
-            Location shipmentDestination,
             Location? importDestination,
+            Location shipmentDestination,            
             bool usesWarehouse
         ) {
             bool hasDistribution = false;
@@ -55,32 +70,48 @@ namespace Logistics.Domain.Import.ShipmentProcess
                 hasDistribution = true;
             }
 
-            return new Shipment(
+            Construct(
                 Guid.NewGuid(),
+                mass,
                 shipmentOrigin,
                 shipmentDestination,
                 Guid.NewGuid(),
                 ImportStatus.Entry,
                 importDestination,
                 usesWarehouse ? Guid.NewGuid() : null,
-                usesWarehouse ? WarehouseReceivingStatus._201 : null,
+                usesWarehouse ? WarehouseReceivingStatus.Entry : null,
                 usesWarehouse ? importDestination : null,
                 hasDistribution ? Guid.NewGuid() : null,
                 hasDistribution ? DistributionStatus.EntryInProgress : null,
                 hasDistribution ? importDestination : null,
                 hasDistribution ? shipmentDestination : null);
+
+            if(Import != null)
+            {
+                Console.WriteLine("Import process started");
+            }
+            if(WarehouseReceiving != null)
+            {
+                Console.WriteLine("Warehouse receiving process started");
+            }
+            if(Distribution != null)
+            {
+                Console.WriteLine("Distribution process started");
+            }
+
+            this.RaiseDomainEvent(new ShipmentCreatedDomainEvent(this));
         }        
         public void ImportStatusChange(ImportStatus importStatus, Location location)
         {
             if(Import == null)
             {
                 throw new InvalidOperationException("Import process is not started");
-            }
-            Import.ShipmentArrivedOnTerminal(location);
+            }           
 
             if(importStatus == ImportStatus.OnTerminal)
             {
-                if(WarehouseReceiving != null)
+                Import.ShipmentArrivedOnTerminal(location);
+                if (WarehouseReceiving != null)
                 {
                     WarehouseReceiving.ShipmentArrivedOnTerminal(location);
                 }
@@ -89,7 +120,48 @@ namespace Logistics.Domain.Import.ShipmentProcess
                     Distribution.ShipmentArrivedOnTerminal(location, WarehouseReceiving?.StatusId);
                 }
             }
+            else
+            {
+                 Import.StatusChanged(importStatus);
+            }
         }
 
+        public void WarehouseReceivingStatusChange(WarehouseReceivingStatus warehouseReceivingStatus, Location location)
+        {
+            if(WarehouseReceiving == null)
+            {
+                throw new InvalidOperationException("Warehouse receiving process is not started");
+            }
+
+            if(warehouseReceivingStatus == WarehouseReceivingStatus.OnTerminal)
+            {
+                WarehouseReceiving.ShipmentArrivedOnTerminal(location);
+                if (Distribution != null)
+                {
+                    Distribution.ShipmentArrivedOnTerminal(location, warehouseReceivingStatus);
+                }
+            }
+            else
+            {
+                WarehouseReceiving.StatusChanged(warehouseReceivingStatus);
+            }
+        }
+
+        public void DistributionStatusChange(DistributionStatus distributionStatus, Location location)
+        {
+            if(Distribution == null)
+            {
+                throw new InvalidOperationException("Distribution process is not started");
+            }
+
+            if(distributionStatus == DistributionStatus.OnTerminal)
+            {
+                Distribution.ShipmentArrivedOnTerminal(location, WarehouseReceiving?.StatusId);
+            }
+            else
+            {
+                Distribution.StatusChanged(distributionStatus);
+            }
+        }
     }
 }

@@ -10,8 +10,8 @@ namespace Logistics.Domain.Import.ShipmentProcess
     {
         private Guid ShipmentProcessId;
         private ImportStatus StatusId = ImportStatus.Entry;
-        private Location Origin;
-        private Location Destination;
+        internal Location Origin { get; }
+        internal Location Destination { get; }
         
         public Import(Guid shipmentProcessId, ImportStatus statusId, Location origin, Location destination)
         {
@@ -23,10 +23,21 @@ namespace Logistics.Domain.Import.ShipmentProcess
         
         internal void ShipmentArrivedOnTerminal(Location terminal)
         {
-            if(Destination == terminal && StatusId == ImportStatus.Organized)
+            if(Destination == terminal && StatusId == ImportStatus.OnTransport)
             {
                 StatusId = ImportStatus.OnTerminal;
+                Console.WriteLine("Import Status changed to " + StatusId);
             }
+        }
+
+        internal void StatusChanged(ImportStatus status)
+        {
+            if (status == ImportStatus.OnTerminal)
+            {
+                throw new InvalidOperationException("Cannot change status to OnTerminal directly");
+            }
+            StatusId = status;
+            Console.WriteLine("Import Status changed to " + status);
         }
     }
 }

@@ -9,15 +9,15 @@ namespace Logistics.Domain.Import.ShipmentProcess
 {
     public enum WarehouseReceivingStatus
     {
-        [Description("Entry in progress")]
-        _201,
-        [Description("Waiting")]
-        _202,
-        [Description("On terminal")]
-        _203,
-        [Description("Loading")]
-        _204,
-        [Description("In warehouse")]
-        _205,
+        [Description("201")]
+        Entry,
+        [Description("202")]
+        ReadyForLoading,
+        [Description("203")]
+        OnTerminal,
+        [Description("204")]
+        Loading,
+        [Description("205")]
+        InWarehouse,
     }
 }

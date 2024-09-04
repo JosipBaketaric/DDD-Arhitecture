@@ -6,7 +6,7 @@ namespace Logistics.Persistance.Import.ShipmentRoute;
 
 public class ShipmentRouteRepository : IShipmentRouteRepository
 {
-    public Domain.Import.ShipmentRoute.ShipmentRoute Get(int shipmentRouteId)
+    public Domain.Import.ShipmentRoute.ShipmentRoute Get(Guid shipmentRouteId)
     {
         return InMemoryDbContext.Aggregates.OfType<Domain.Import.ShipmentRoute.ShipmentRoute>().FirstOrDefault(x => x.ShipmentId == shipmentRouteId);
     }
@@ -16,7 +16,7 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
         return InMemoryDbContext.Aggregates.OfType<Domain.Import.ShipmentRoute.ShipmentRoute>().Where(x => x.TransportId == transportId);
     }
 
-    public bool IsTransportOnShipmentRoute(int shipmentId, int transportId)
+    public bool IsTransportOnShipmentRoute(Guid shipmentId, int transportId)
     {
         return false;
     }
@@ -24,5 +24,10 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
     public void Update(Domain.Import.ShipmentRoute.ShipmentRoute shipmentRoute)
     {
         
+    }
+
+    public void Add(Domain.Import.ShipmentRoute.ShipmentRoute shipmentRoute)
+    {
+        InMemoryDbContext.Aggregates.Add(shipmentRoute);
     }
 }

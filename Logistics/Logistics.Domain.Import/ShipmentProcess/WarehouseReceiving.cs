@@ -21,10 +21,21 @@ namespace Logistics.Domain.Import.ShipmentProcess
 
         internal void ShipmentArrivedOnTerminal(Location terminal)
         {
-            if(WarehouseTerminal == terminal && StatusId == WarehouseReceivingStatus._202)
+            if(WarehouseTerminal == terminal && StatusId == WarehouseReceivingStatus.ReadyForLoading)
             {
-                StatusId = WarehouseReceivingStatus._203;
+                StatusId = WarehouseReceivingStatus.OnTerminal;
+                Console.WriteLine("WarehouseReceiving Status changed to " + StatusId);
             }
+        }
+
+        internal void StatusChanged(WarehouseReceivingStatus status)
+        {
+            if (status == WarehouseReceivingStatus.OnTerminal)
+            {
+                throw new InvalidOperationException("Cannot change status to OnTerminal directly");
+            }
+            StatusId = status;
+            Console.WriteLine("WarehouseReceiving Status changed to " + status);
         }
     }
 }

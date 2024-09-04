@@ -13,14 +13,14 @@ public static class InMemoryDbContext
     {
         // Add shipment routes
         Aggregates.Add(new Domain.Import.ShipmentRoute.ShipmentRoute(
-            1,
+            Guid.NewGuid(),
             10,
             new Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 1"),
             new Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 2"),
         1
             ));
         Aggregates.Add(new Domain.Import.ShipmentRoute.ShipmentRoute(
-            2,
+            Guid.NewGuid(),
             20,
             new Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 1"),
             new Domain.Import.Location("HR", "Zagreb", "10000", "Terminal 3"),

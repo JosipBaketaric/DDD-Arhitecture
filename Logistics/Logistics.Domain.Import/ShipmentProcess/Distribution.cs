@@ -10,8 +10,8 @@ namespace Logistics.Domain.Import.ShipmentProcess
     {
         private Guid ShipmentProcessId;
         private DistributionStatus StatusId;
-        private Location Origin;
-        private Location Destination;        
+        internal Location Origin { get; }
+        internal Location Destination { get; }
 
         public Distribution(Guid shipmentProcessId, DistributionStatus statusId, Location origin, Location destination)
         {
@@ -22,16 +22,27 @@ namespace Logistics.Domain.Import.ShipmentProcess
         }
         internal void ShipmentArrivedOnTerminal(Location terminal, WarehouseReceivingStatus? warehouseReceivingStatus)
         {
-            if (Destination == terminal && StatusId == DistributionStatus.Organized)
+            if (Origin == terminal && StatusId == DistributionStatus.Organized)
             {
-                if(warehouseReceivingStatus == WarehouseReceivingStatus._203)
+                if(warehouseReceivingStatus == WarehouseReceivingStatus.ReadyForLoading)
                 {
                     StatusId = DistributionStatus.WarehouseReceiving;
                 } else
                 {
                     StatusId = DistributionStatus.OnTerminal;
                 }
+                Console.WriteLine("Distribution Status changed to " + StatusId);
             }            
+        }
+
+        internal void StatusChanged(DistributionStatus status)
+        {
+            if (status == DistributionStatus.OnTerminal)
+            {
+                throw new InvalidOperationException("Cannot change status to OnTerminal directly");
+            }
+            StatusId = status;
+            Console.WriteLine("Distribution Status changed to " + StatusId);
         }
     }
 }
