@@ -56,28 +56,33 @@
     - use to start hangfire and execute async jobs
 
 # Guideliness:
-- Try to use small aggregates, better to use two if possible, than one large. Think how many properties of the aggergate does your command really need, if it's just a few, and the aggergate is already heavy, consider creating a new one. Usualy if one command changes one property, the other just read's it, so we can split them, since we won't violate invariant. Of course we prefer to have all actions on the same object, if it's performant :).
+## Aggregates
+- Try to name your aggregates and methods to reflect behaviour, not structure or crud. Eg. updateState to Approve, Deny.
+- Try to use small aggregates, better to use two if possible, than one large. Think how many properties of the aggergate does your command really need, if it's just a few, and the aggergate is already heavy, consider creating a new one. Usualy if one command changes one property, the other just reads it, so we can split them, since it won't violate invariant. Of course we prefer to have all actions on the same object, if it's performant :).
+- avoid passing domain services into aggergates, since it adds an outside dependency to them... rather force the change on the aggregate by making the method on aggregate internal, and forcing the usege of the domain service which changes the aggregate
+- create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
+## Domain objects
 - Use access modifiers to expres the intent to others using your code what you meant. Only aggergates and only it's application used methods are set as public, only methods used by other objects are internal, and everything else is private (or protected).
 - All of our aggregates and entities need public constructors so we can create them in our repositories, these are not to be used anywhere else
-- Try to name your aggregates and methods to reflect behaviour, not structure or crud. Eg. updateState to Approve, Deny.
+- try to use value objects for properties that change togeather (eg. price which has amount and currency, use a separate class instead of having amount and currency on entity)
+- for aggregate/entity default values, try to set them in the constructor not use a default property value, we want to be explicit as we can
+## Design
 - favor more api's with simpler logic than fewer with complex logic. Eg. instead of sending all 10 properties to update, with one property having side effects (changing somehting else based on it's value), try to brake it into two, with the one property having side effects clearly separated on the ui (since it will most likely be more intuitive to the user that somehtin other than just field update is going on) and having a clear behaviour drive name with it :)
 - It is fine to have same name classes, even behaviour in different modules. Thing is that once we decided a boundary of a bounded countext, we did say that changes to it will happen only for reasons inside it, so we don't want to reuse stuff from other modules, even if it behaves the same, because it will probably have a different reason to change. If we do see a lot of same behavoiur going on, maybe we should revisit our bounded context boundaries.
+## Validation
 - use ResultPattern rather than exceptions for envorcine invariants and validations
 - validate command in app layer with stuff it can validate (types, lenght, not null) to improve performance (not having to load a heavy aggeregate just to check for null)
 - validate aggregate inside aggregate for stuff the aggregate knows (it's own properties)
 - validate in domain service stuff that is outside of the aggregate
 - security checks and transaction commits are done by Aplication layer
+## Events
+- create domain events (IDomainEvent) for cross aggregate communication (in same bounded context or in different bounded context) to have aggregates decoupled (not have aggregate call aggregate)
 - event handlers
-- use inside bounded countext to enforce changes in same transaction (aggregate to aggregate change)
-- use inside internal to add to async jobs (we should try to use jobs, since they can be replayed, not calling another change in a different transaction that if fails is gonna lead to inconsistency)
-- use interfaces to force same transacaction between bounded contexts
+    - use inside bounded countext to make many aggregates (from same bounded context) change in same transaction
+    - use inside internal to make many aggregates (from different bounded context) change in same transaction
+    - use inside external to change aggregate make call to external system in same transaction
 - use inside external to add async jobs for external systems (email, payment service...)
-- avoid using dtc if possible :)
-- avoid passing domain services into aggergates, since it add a outside dependency to them... rather force the change on the aggregate by making the method on aggregate internal, and forcing the usege of the domain service which changes the aggregate
-- try to use value objects for properties that change togeather (eg. price which has amount and currency, use a separate class instead of having amount and currency on entity)
-- create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
-- for aggregate default values, try to set them in the constructor not use a default property value, we want to be explicit as we can
-- create domain events (IDomainEvent) for cross aggregate communication (in same bounded context or in different bounded context)
+
 
 # Questions:
 - IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... we don't need it in domain but where is it implemented, in persistance or in app layer?
