@@ -75,11 +75,6 @@ public class Program
         shipmentRouteAppService.ChangeTransportStatus(new ChangeTransportStatusCommand(transportId, TransportStatus.Driving, null));
 
         shipmentRouteAppService.ChangeTransportStatus(new ChangeTransportStatusCommand(transportId, TransportStatus.OnTerminal, warehouseTerminal));
-                
-        foreach (var aggregate in InMemoryDbContext.Aggregates)
-        {
-            Console.WriteLine("Aggregate: {0}", aggregate.GetType().Name);
-        }
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -90,7 +85,7 @@ public class Program
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         
         services.AddTransient<IDomainEventHandler<TransportStatusChangedDomainEvent>, TransportStatusChangedDomainEventHandler>();
-        services.AddTransient<IDomainEventHandler<ShipmentRouteDoneDomainEvent>, ShipmentRouteDoneDomainEventHandler>();
+        services.AddTransient<IDomainEventHandler<ShipmentRouteStatusChangeDomainEvent>, ShipmentRouteStatusChangedDomainEventHandler>();
 
         services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
     }

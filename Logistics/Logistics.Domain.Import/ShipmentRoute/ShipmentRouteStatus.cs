@@ -1,6 +1,6 @@
 namespace Logistics.Domain.Import.ShipmentRoute
 {
-    internal enum ShipmentRouteStatus
+    public enum ShipmentRouteStatus
     {
         Unassigned,
         Assigned,

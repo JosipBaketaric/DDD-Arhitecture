@@ -43,15 +43,29 @@ namespace Logistics.Domain.Import.ShipmentRoute
             Console.WriteLine("Shipment {0} added to transport {1}", ShipmentId, TransportId);
         }
 
+        internal void InProgress()
+        {
+            status = ShipmentRouteStatus.InProgress;
+            Console.WriteLine("Shipment {0} route in progress", ShipmentId);
+            this.RaiseDomainEvent(new ShipmentRouteStatusChangeDomainEvent(
+                    ShipmentId,
+                    ShipmentRouteId,
+                    null,
+                    ShipmentProcessType,
+                    status
+                    ));
+        }
+
         internal void ArrivedOnLocation(Location location) {
             if(to == location) {
                 status = ShipmentRouteStatus.Done;
                 Console.WriteLine("Shipment {0} route done", ShipmentId);
-                this.RaiseDomainEvent(new ShipmentRouteDoneDomainEvent(
+                this.RaiseDomainEvent(new ShipmentRouteStatusChangeDomainEvent(
                     ShipmentId,
                     ShipmentRouteId,
                     location,
-                    ShipmentProcessType
+                    ShipmentProcessType,
+                    status
                     ));
             }
         }

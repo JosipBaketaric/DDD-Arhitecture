@@ -12,6 +12,15 @@ public class TransportStatusChangedDomainEventHandler: IDomainEventHandler<Trans
     }
     public void Handle(TransportStatusChangedDomainEvent domainEvent) {
         Console.WriteLine("Transport status changed event handler called.");
+        if(domainEvent.TransportStatus == TransportStatus.Driving)
+        {
+            var shipmentRoutes = _shipmentRouteRepository.GetShipmentRoutesForTransport(domainEvent.TransportId);
+            foreach (var shipmentRoute in shipmentRoutes)
+            {
+                shipmentRoute.InProgress();
+                _shipmentRouteRepository.Update(shipmentRoute);
+            }
+        }
         if (domainEvent.TransportStatus == TransportStatus.OnTerminal || domainEvent.TransportStatus == TransportStatus.Done)
         {
             var shipmentRoutes = _shipmentRouteRepository.GetShipmentRoutesForTransport(domainEvent.TransportId);
