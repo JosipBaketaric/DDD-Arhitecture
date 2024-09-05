@@ -1,5 +1,5 @@
 # Principles:
-- Hexagonal architecture
+- Clean architecture
 - DDD
 - Modular monolith with bounded context equals module
 - CQS - use separate backend models for query (reads) vs command (data changes) but use the same db
