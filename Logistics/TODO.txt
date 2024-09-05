@@ -1,8 +1,11 @@
+Hangfire for async tasks
+
 Create Billing bounded context to handle integration with MSBC and with shipping bounded context
 
 Finish Scenario 1 till end
 are there fields or all all properties since thay need to be stored in db? 
 Add commandResults
+Add async
 
 
 Move ShipmentRoute creation from domain service to handler?

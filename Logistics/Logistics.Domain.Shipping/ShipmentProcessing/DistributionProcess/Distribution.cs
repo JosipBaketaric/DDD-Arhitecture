@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logistics.Domain.Base;
 using Logistics.Domain.Shipping.ShipmentProcessing.WarehouseReceivingProcess;
 
 namespace Logistics.Domain.Shipping.ShipmentProcessing.DistributionProcess
 {
-    public class Distribution
+    public class Distribution: Entity
     {
         private Guid ShipmentProcessId;
+        private Guid ShipmentId;
         private DistributionStatus StatusId;
         internal Location Origin { get; }
         internal Location Destination { get; }
 
-        public Distribution(Guid shipmentProcessId, DistributionStatus statusId, Location origin, Location destination)
+        public Distribution(Guid shipmentProcessId, DistributionStatus statusId, Location origin, Location destination, Guid shipmentId)
         {
             ShipmentProcessId = shipmentProcessId;
             StatusId = statusId;
             Origin = origin;
             Destination = destination;
+            ShipmentId = shipmentId;
         }
         internal void ShipmentArrivedOnTerminal(Location terminal, WarehouseReceivingStatus? warehouseReceivingStatus)
         {
             if (Origin == terminal && StatusId == DistributionStatus.Organized)
             {
-                if (warehouseReceivingStatus == WarehouseReceivingStatus.ReadyForLoading)
+                if (warehouseReceivingStatus == WarehouseReceivingStatus.Organized)
                 {
                     StatusId = DistributionStatus.WarehouseReceiving;
                 }
@@ -45,6 +43,10 @@ namespace Logistics.Domain.Shipping.ShipmentProcessing.DistributionProcess
             }
             StatusId = status;
             Console.WriteLine("Distribution Status changed to " + StatusId);
+            if(status == DistributionStatus.Organized)
+            {
+                RaiseDomainEvent(new ShipmentDistributionOrganizedDomainEvent(ShipmentProcessId, Origin, Destination, ShipmentId));
+            }
         }
     }
 }

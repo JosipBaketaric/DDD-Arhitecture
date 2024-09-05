@@ -14,6 +14,7 @@ using Logistics.Domain.Shipping.ShipmentProcessing.DistributionProcess;
 using Logistics.Persistance.Shipping.ShipmentProcess;
 using Logistics.Persistance.Shipping.ShipmentRouting;
 using Logistics.Persistance.Shipping;
+using Logistics.Integration.Internal.Shipping.Billing;
 public class Program
 {
     static void Main(string[] args)
@@ -74,7 +75,7 @@ public class Program
 
         shipmentRouteAppService.AddShipmentToTransport(new CoverShipmentRouteByTransportCommand(transportId, importShipmentRouteId));        
 
-        shipmentProcessAppService.ChangeWarehouseReceivingStatus(new ChangeWarehouseReceivingCommand(shipmentId, WarehouseReceivingStatus.ReadyForLoading, null));
+        shipmentProcessAppService.ChangeWarehouseReceivingStatus(new ChangeWarehouseReceivingCommand(shipmentId, WarehouseReceivingStatus.Organized, null));
 
         shipmentProcessAppService.ChangeDistributionStatus(new ChangeDistributionStatusCommand(shipmentId, DistributionStatus.Organized, null));
 
@@ -89,9 +90,12 @@ public class Program
         services.AddTransient<IShipmentRouteRepository, ShipmentRouteRepository>();
         services.AddTransient<ITransportRepository, TransportRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
-        
+        services.AddTransient<IBillingIntegrationService, BillingIntegrationService>();
+
         services.AddTransient<IDomainEventHandler<TransportStatusChangedDomainEvent>, TransportStatusChangedDomainEventHandler>();
         services.AddTransient<IDomainEventHandler<ShipmentRouteStatusChangeDomainEvent>, ShipmentRouteStatusChangedDomainEventHandler>();
+        services.AddTransient<IDomainEventHandler<ShipmentImportOrganizedDomainEvent>, ShipmentImportOrganizedDomainEventHandler>();
+        services.AddTransient<IDomainEventHandler<ShipmentDistributionOrganizedDomainEvent>, ShipmentDistributionOrganizedDomainEventHandler>();
 
         services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
     }

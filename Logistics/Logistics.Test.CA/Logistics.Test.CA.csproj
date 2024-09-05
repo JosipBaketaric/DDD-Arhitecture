@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Logistics.Domain.Shipping\Logistics.Domain.Shipping.csproj" />
     <ProjectReference Include="..\Logistics.Application.Command\Logistics.Application.Command.Shipping.csproj" />
+    <ProjectReference Include="..\Logistics.Integration.Internal.Shipping\Logistics.Integration.Internal.Shipping.csproj" />
     <ProjectReference Include="..\Logistics.Persistance.Shipping\Logistics.Persistance.Shipping.csproj" />
   </ItemGroup>
 

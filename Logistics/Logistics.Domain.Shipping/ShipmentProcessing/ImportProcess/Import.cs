@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logistics.Domain.Base;
 
 namespace Logistics.Domain.Shipping.ShipmentProcessing.ImportProcess
 {
-    public class Import
+    public class Import: Entity
     {
         private Guid ShipmentProcessId;
+        private Guid ShipmentId;
         private ImportStatus StatusId = ImportStatus.Entry;
         internal Location Origin { get; }
         internal Location Destination { get; }
 
-        public Import(Guid shipmentProcessId, ImportStatus statusId, Location origin, Location destination)
+        public Import(Guid shipmentProcessId, Guid shipmentId, ImportStatus statusId, Location origin, Location destination)
         {
             ShipmentProcessId = shipmentProcessId;
+            ShipmentId = shipmentId;
             StatusId = statusId;
             Origin = origin;
             Destination = destination;
@@ -38,6 +36,10 @@ namespace Logistics.Domain.Shipping.ShipmentProcessing.ImportProcess
             }
             StatusId = status;
             Console.WriteLine("Import Status changed to " + status);
+            if(status == ImportStatus.Organized)
+            {
+                RaiseDomainEvent(new ShipmentImportOrganizedDomainEvent(ShipmentProcessId, Origin, Destination, ShipmentId));
+            }            
         }
     }
 }

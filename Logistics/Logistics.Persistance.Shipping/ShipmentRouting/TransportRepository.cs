@@ -6,7 +6,7 @@ public class TransportRepository : ITransportRepository
 {
     public Transport Get(Guid id)
     {
-        return InMemoryDbContext.Aggregates.OfType<Transport>().FirstOrDefault(x => x.Id == id);
+        return InMemoryDbContext.Entities.OfType<Transport>().FirstOrDefault(x => x.Id == id);
     }
 
     public void Update(Transport transport)
@@ -16,6 +16,6 @@ public class TransportRepository : ITransportRepository
 
     public void Add(Transport transport)
     {
-        InMemoryDbContext.Aggregates.Add(transport);
+        InMemoryDbContext.Entities.Add(transport);
     }
 }

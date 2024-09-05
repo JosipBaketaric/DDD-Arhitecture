@@ -8,10 +8,10 @@ namespace Logistics.Domain.Shipping.ShipmentProcessing
     public class Shipment : Aggregate
     {
         public Guid ShipmentId { get; private set; }
-        internal Import Import { get; private set; }
+        public Import Import { get; private set; }
         internal WarehouseReceiving WarehouseReceiving { get; private set; }
-        internal Distribution Distribution { get; private set; }
-        internal int Mass { get; private set; }
+        public Distribution Distribution { get; private set; }
+        public int Mass { get; private set; }
         public Shipment(Guid shipmentId,
             int mass,
             Location ShipmentOrigin,
@@ -49,15 +49,15 @@ namespace Logistics.Domain.Shipping.ShipmentProcessing
             Mass = mass;
             if (importProcessId.HasValue)
             {
-                Import = new Import(importProcessId.Value, importStatus.Value, ShipmentOrigin, importDestination);
+                Import = new Import(importProcessId.Value, shipmentId, importStatus.Value, ShipmentOrigin, importDestination);
             }
             if (warehouseReceivingProcessId.HasValue)
             {
-                WarehouseReceiving = new WarehouseReceiving(warehouseReceivingProcessId.Value, warehouseReceivingStatus.Value, warehouseTerminal);
+                WarehouseReceiving = new WarehouseReceiving(warehouseReceivingProcessId.Value, warehouseReceivingStatus.Value, warehouseTerminal, shipmentId);
             }
             if (distributionProcessId.HasValue)
             {
-                Distribution = new Distribution(distributionProcessId.Value, distributionStatus.Value, distributionOriginTerminal, distributionDestinationTerminal);
+                Distribution = new Distribution(distributionProcessId.Value, distributionStatus.Value, distributionOriginTerminal, distributionDestinationTerminal, shipmentId);
             }
         }
 

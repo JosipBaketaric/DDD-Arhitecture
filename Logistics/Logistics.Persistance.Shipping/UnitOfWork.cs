@@ -24,17 +24,17 @@ public class UnitOfWork : IUnitOfWork
     {
         var dispatcher = new DomainEventDispatcher(_serviceProvider);
 
-        var domainEvents = InMemoryDbContext.Aggregates.SelectMany(x => x.GetDomainEvents()).ToList();
-        foreach(var aggregate in InMemoryDbContext.Aggregates)
+        var domainEvents = InMemoryDbContext.Entities.SelectMany(x => x.GetDomainEvents()).ToList();
+        foreach(var entity in InMemoryDbContext.Entities)
         {
-            aggregate.ClearDomainEvents();
+            entity.ClearDomainEvents();
         }
         foreach (var domainEvent in domainEvents)
         {
             dispatcher.Dispatch(domainEvent);
         }
         // events can add more aggregates with their events
-        if(InMemoryDbContext.Aggregates.Any(x => x.GetDomainEvents().Any()))
+        if(InMemoryDbContext.Entities.Any(x => x.GetDomainEvents().Any()))
         {
             HandleEvents();
         }

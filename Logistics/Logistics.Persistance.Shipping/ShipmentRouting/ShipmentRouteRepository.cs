@@ -6,12 +6,12 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
 {
     public ShipmentRoute Get(Guid shipmentRouteId)
     {
-        return InMemoryDbContext.Aggregates.OfType<ShipmentRoute>().FirstOrDefault(x => x.ShipmentRouteId == shipmentRouteId);
+        return InMemoryDbContext.Entities.OfType<ShipmentRoute>().FirstOrDefault(x => x.ShipmentRouteId == shipmentRouteId);
     }
 
     public IEnumerable<ShipmentRoute> GetShipmentRoutesForTransport(Guid transportId)
     {
-        return InMemoryDbContext.Aggregates.OfType<ShipmentRoute>().Where(x => x.TransportId == transportId);
+        return InMemoryDbContext.Entities.OfType<ShipmentRoute>().Where(x => x.TransportId == transportId);
     }
 
     public bool IsTransportOnShipmentRoute(Guid shipmentId, Guid transportId)
@@ -26,6 +26,6 @@ public class ShipmentRouteRepository : IShipmentRouteRepository
 
     public void Add(ShipmentRoute shipmentRoute)
     {
-        InMemoryDbContext.Aggregates.Add(shipmentRoute);
+        InMemoryDbContext.Entities.Add(shipmentRoute);
     }
 }

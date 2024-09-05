@@ -43,11 +43,15 @@
   - [ProductName].API.[ModuleName]
     - under feature name we add controllers with either Query or Command sufix that implement api endpoints and call application.Command or application.Query
     - reuse queryInputs, Views, commands and commandresults from applicationService, don't map to new objects... if needed (eg. these objects can't serialize, than do it on a case by case basis)
-  - [ProductName].Internal.[ModuleName]
-    - implementation of internal contracts from other modules that depend on this module
-    - this is to avoid polluting the domain with other modules needs, and have a clear sense of who depends on this module
-  - [ProductName].External.[ModuleName]
-    - implementation of interfaces used by this module that communicate to external systems
+  - [ProductName].Integration.Internal.[ModuleName]
+    - create a separate folder for each module that depends on this module (when we make a change to this module we want to know who is affected by id)
+    - in each folder go 
+        - IntegrationServices - they look like as applicationServices, but are here to have a clear visibility on communication between modules(bounded contexts)    
+            - interfaces and implementations of IntegrationServices both go here (need interfaces because we want to mock them in unit tests)
+        - DomainEventHandlers - classes that handle domain events from this module and call IntegrationServices
+            - We use events for the same reason we use events in the domain, to decouple changes to multiple aggregates, only here its aggregates across bounded contexts
+  - [ProductName].Ingegration.External.[ModuleName]
+    - same as internal but for external systems
   - [ProductName].AsyncJobs.[ModuleName] (optional)
     - use to start hangfire and execute async jobs
 
@@ -73,6 +77,7 @@
 - try to use value objects for properties that change togeather (eg. price which has amount and currency, use a separate class instead of having amount and currency on entity)
 - create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
 - for aggregate default values, try to set them in the constructor not use a default property value, we want to be explicit as we can
+- create domain events (IDomainEvent) for cross aggregate communication (in same bounded context or in different bounded context)
 
 # Questions:
 - IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... we don't need it in domain but where is it implemented, in persistance or in app layer?
@@ -82,12 +87,13 @@
 - do we need an Internal project, and should it have implementation of others modules interfaces by using it's domain, or should it have implementations of it's own interfaces by using other modules domains?
 - do we want to use identity classes?
 - class for each table and mapping in repository vs using domain objects directly in configuration mapping? Went with first for now.
-- use events or explicitly in application service when changing two aggregates form same or different context in same transaction?
+- when changing two aggregates use events? or explicitly in application service? form same or different context in same transaction?
 - use domain events for cross bounded context communication? how? how is it different from using interfaces? hangfire fro eventual consistency scenarios? event handlers outside of transaction through async jobs only?
 - example code of what goes to app service vs what goes to domain service
 - aggregate story - each method (or a small number of them) in it's own interface, than with implementation on class, instead of adding a method directly on a class, so we can end up with one class with many interface implementations. Than we only use the interface where we need, and could potentionally have a repository for each interface to just fill the part of the aggregate needed for that interface. Needs adidtional research, but sounds like we would still have a partially loadaded aggregate and enforcing invariants would be questionable right?
 - guids or int for id's? App code can generate guids and they are unique, so switching id's between entities failes, while int's take less space and are more readable. Can Guid.NewGuid() be used in aggregate?
 - undescore for private class variables?
+- how much overhead would we have to introduce a project that acts as a service bus, and has definitions of all integration events (communication between modules), and have modules subscribe to it?
 
 # Logistics discussions:
   - Transport status change emits event that calls it's shipments shipmentRoute state change, and this also throws event to update shipment status. 

@@ -7,7 +7,7 @@ namespace Logistics.Domain.Shipping.ShipmentProcessing.WarehouseReceivingProcess
         [Description("201")]
         Entry,
         [Description("202")]
-        ReadyForLoading,
+        Organized,
         [Description("203")]
         OnTerminal,
         [Description("204")]

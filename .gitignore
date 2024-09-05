@@ -15,3 +15,7 @@
 /Logistics/Logistics.Persistance.Import/obj
 /.vs/playground/v17
 /.vs
+/Logistics/Logistics.Domain.Billing/bin/Debug/net8.0
+/Logistics/Logistics.Domain.Billing/obj
+/Logistics/Logistics.Integration.Internal.Shipping/bin/Debug/net8.0
+/Logistics/Logistics.Integration.Internal.Shipping/obj

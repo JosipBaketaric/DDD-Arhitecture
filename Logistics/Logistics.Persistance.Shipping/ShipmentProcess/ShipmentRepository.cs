@@ -7,12 +7,14 @@ namespace Logistics.Persistance.Shipping.ShipmentProcess
     {
         public void Add(Shipment shipment)
         {
-            InMemoryDbContext.Aggregates.Add(shipment);
+            InMemoryDbContext.Entities.Add(shipment);
+            InMemoryDbContext.Entities.Add(shipment.Import);
+            InMemoryDbContext.Entities.Add(shipment.Distribution);
         }
 
         public Shipment Get(Guid shipmentId)
         {
-            return InMemoryDbContext.Aggregates.OfType<Shipment>().FirstOrDefault(x => x.ShipmentId == shipmentId);
+            return InMemoryDbContext.Entities.OfType<Shipment>().FirstOrDefault(x => x.ShipmentId == shipmentId);
         }
 
         public void Update(Shipment shipment)

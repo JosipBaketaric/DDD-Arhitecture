@@ -7,5 +7,5 @@ namespace Logistics.Persistance.Shipping;
 public static class InMemoryDbContext
 {
     // Static list to hold data globally
-    public static List<Aggregate> Aggregates { get; } = new List<Aggregate>();    
+    public static List<Entity> Entities { get; } = new List<Entity>();    
 }
