@@ -72,6 +72,7 @@
 - avoid passing domain services into aggergates, since it add a outside dependency to them... rather force the change on the aggregate by making the method on aggregate internal, and forcing the usege of the domain service which changes the aggregate
 - try to use value objects for properties that change togeather (eg. price which has amount and currency, use a separate class instead of having amount and currency on entity)
 - create separate repositories for each aggregate, and use the aggeregates repository for domain service queries related to that aggregate
+- for aggregate default values, try to set them in the constructor not use a default property value, we want to be explicit as we can
 
 # Questions:
 - IUnitOfWork goes into app layer, because it's the only one that is gonna use it, it's controlling transactions... we don't need it in domain but where is it implemented, in persistance or in app layer?
@@ -87,3 +88,10 @@
 - aggregate story - each method (or a small number of them) in it's own interface, than with implementation on class, instead of adding a method directly on a class, so we can end up with one class with many interface implementations. Than we only use the interface where we need, and could potentionally have a repository for each interface to just fill the part of the aggregate needed for that interface. Needs adidtional research, but sounds like we would still have a partially loadaded aggregate and enforcing invariants would be questionable right?
 - guids or int for id's? App code can generate guids and they are unique, so switching id's between entities failes, while int's take less space and are more readable. Can Guid.NewGuid() be used in aggregate?
 - undescore for private class variables?
+
+# Logistics discussions:
+  - Transport status change emits event that calls it's shipments shipmentRoute state change, and this also throws event to update shipment status. 
+    - Why? Since Transport, ShipmentRoute and Shipment are all aggregates (and have their own use cases without needing others), we try to avoid adding each of them as a property of another (eg. adding a List of shipmentRoutes under Transport) since doing so would compromise the invariants of the parent (in our case Transport, since routes can change without transport). Also loading all shipmentRoutes on transport, for each transport change is not performant.
+    - DomainService? Tried to add it to domain service, but ended up with application needing to load transport and separately load transports ShipmentRoutes, which looks like it needs to know to much (and can load some other transports routes, or load this transports routes partially, we can't control it). Tried to move the loading to the domainService, but than it also needs to call repo.update and that should be the responsibility of a app service... tried to return all loaded object from the domain service but than the app service needs to know what to update, and if it misses to update something we have an inconsistency
+    - Shipment creation creates ShipmentRoutes so did this with a domain service, and in this case the app service needs to call a repository update for each created aggregate. Left it but would rather have it move to a domain event right? 
+ 

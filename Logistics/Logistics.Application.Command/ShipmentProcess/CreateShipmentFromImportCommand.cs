@@ -1,11 +1,6 @@
-﻿using Logistics.Domain.Import;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logistics.Domain.Shipping;
 
-namespace Logistics.Application.Command.Import.ShipmentProcess
+namespace Logistics.Application.Command.Shipping.ShipmentProcess
 {
     public class CreateShipmentFromImportCommand
     {

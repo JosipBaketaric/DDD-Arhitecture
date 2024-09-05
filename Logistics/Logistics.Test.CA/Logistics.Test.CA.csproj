@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logistics.Domain.Import\Logistics.Domain.Import.csproj" />
-    <ProjectReference Include="..\Logistics.Application.Command\Logistics.Application.Command.Import.csproj" />
-    <ProjectReference Include="..\Logistics.Persistance.Import\Logistics.Persistance.Import.csproj" />
+    <ProjectReference Include="..\Logistics.Domain.Shipping\Logistics.Domain.Shipping.csproj" />
+    <ProjectReference Include="..\Logistics.Application.Command\Logistics.Application.Command.Shipping.csproj" />
+    <ProjectReference Include="..\Logistics.Persistance.Shipping\Logistics.Persistance.Shipping.csproj" />
   </ItemGroup>
 
 </Project>

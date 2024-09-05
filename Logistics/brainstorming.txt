@@ -1,73 +1,10 @@
-domain.bd1
-	contract to use bd2
-domain.bd2
-	contract to use bd1
-domain.bd1.contracts
-	- ref domain.bd2 to use contract
-	- ref domain.bd1 to implement contract
-domain.bd2.contracts
-	- ref domain.bd1 to use contract
-	- ref domain.bd2 to implement contract
-	
-	
-Create shipment (100 fields)
-Create transport (50 fields)
-Add Shipment to transport (10 from shipment, 10 from transport)
-Change status on transport (10 from all shipment on transport, 10 from transport)
-
-IS LOCATION A TERMINAL OR NOT - TRANSPORT ROUTE SHOULD HAVE TWO OR MORE TERMINALS (FROM SHIPMENT?)
-
-Scenario 1 - CoverShipmentRoute
-- CoverShipmentRouteByTransportCommand(ShipmentRouteId, TransportId)
-- App
-	- repo.GetShipmentRoute()
-	- repo.GetTransport()
-	- ShipmentRouteService.CoverByTransport
-	- repo.updateShipmentRoute
-	- commit
-
-ShipmentRouteService.CoverByTransport(ShipmentRoute, Transport)
- - check if transport is already part of another shipment route
- - check if transport has mass for shipment
- - ShipmentRoute.CoverShipmentRoute(Transport) 
-
-ShipmentRoute
-- Create - need service because we need the last routSegmentIndex?!?
-- ConverShipmentRouteByTransport(Transport)	
-	- add transport to shimpentRoute and status to planned
-- RemoveTransport()
-- transportId
-- from
-- to
-- routeSegmentIndex
-- route status (Unassigned, Assigned, InProgress, Done)
-- Arrived(Location)
-	- to = Location  (Done)
-	- from = Location (In progress)
-
-Scenario 2 - RemoveShipmentRoute
-- RmoveShipmentRouteCommand(ShipmentId, TransportId)
-- App
-	- repo.getShipmentRoute(ShipmentId, TransportId)
-	- ShipmentRouteService.RemoveTransport(ShipmentRoute)
-		- check if route is last
-		- ShipmentRoute.RemoveTransport()
-	- repo.update
-	- commit
+Billing:
+- when shipmentProcesses are organized, send shipment info (mass, processes, origin, destination) to billing so we can create a bill:
+	- create bill with item for each process and amount from price list for process, mass, origin, destination
+	- on bill.publish send bill to external billing system
 
 
-Transport ?!?
-- maxMass
-- currentMass
-
-TransportArrival
-- Arrived(Location)
-	- for each ShipmentRoute.Arrived(Location)
-- List<ShipmentRoute>
-	
-	
-	
-ShipmentProcess
+Scenario 1
 - Transport.Import.ArrivedOnTerminal(Terminal)
 	- ShipmentRoute - Done
 		- ShipmentProcess.Import.ArrivedOnTerminal(Terminal) if Terminal == Ship.Destination than delivered else OnTerminal

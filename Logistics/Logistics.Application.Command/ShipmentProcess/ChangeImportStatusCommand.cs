@@ -1,12 +1,7 @@
-﻿using Logistics.Domain.Import;
-using Logistics.Domain.Import.ShipmentProcess;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logistics.Domain.Shipping;
+using Logistics.Domain.Shipping.ShipmentProcessing.ImportProcess;
 
-namespace Logistics.Application.Command.Import.ShipmentProcess
+namespace Logistics.Application.Command.Shipping.ShipmentProcess
 {
     public class ChangeImportStatusCommand
     {

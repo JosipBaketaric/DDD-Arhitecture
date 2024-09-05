@@ -1,4 +1,4 @@
-﻿namespace Logistics.Application.Command.Import
+﻿namespace Logistics.Application.Command.Shipping
 {
     public interface IUnitOfWork
     {

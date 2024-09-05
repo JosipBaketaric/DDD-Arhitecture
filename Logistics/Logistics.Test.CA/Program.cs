@@ -1,13 +1,19 @@
-﻿using Logistics.Application.Command.Import;
+﻿using Logistics.Application.Command.Shipping;
 using Logistics.Domain.Base;
-using Logistics.Domain.Import.ShipmentRoute;
-using Logistics.Domain.Import.ShipmentProcess;
-using Logistics.Domain.Import;
-using Logistics.Persistance.Import;
-using Logistics.Persistance.Import.ShipmentRoute;
+using Logistics.Domain.Shipping;
 using Microsoft.Extensions.DependencyInjection;
-using Logistics.Persistance.Import.ShipmentProcess;
-using Logistics.Application.Command.Import.ShipmentProcess;
+using Logistics.Application.Command.Shipping.ShipmentProcess;
+using Logistics.Domain.Shipping.ShipmentRouting;
+using Logistics.Domain.Shipping.ShipmentRouting.Transporting;
+using Logistics.Domain.Shipping.ShipmentProcessing.ImportProcess;
+using Logistics.Domain.Shipping.ShipmentProcessing.WarehouseReceivingProcess;
+using Logistics.Domain.Shipping.ShipmentProcessing.Repositories;
+using Logistics.Domain.Shipping.ShipmentProcessing;
+using Logistics.Application.Command.Shipping.ShipmentRoute;
+using Logistics.Domain.Shipping.ShipmentProcessing.DistributionProcess;
+using Logistics.Persistance.Shipping.ShipmentProcess;
+using Logistics.Persistance.Shipping.ShipmentRouting;
+using Logistics.Persistance.Shipping;
 public class Program
 {
     static void Main(string[] args)

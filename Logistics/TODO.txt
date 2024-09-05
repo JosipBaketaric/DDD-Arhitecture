@@ -1,13 +1,10 @@
-Use shipment route with transport for status update instead of app service
-Finish Scenario 1 till end
-Move ShipmentRoute creation from handler to domain service
-use _ or not for private fields, fields as uppercase or lowercase, are there fields or all all properties since thay need to be stored in db? No default values, but assignment in constructor
-Rename ShipmentRoute namespace
-Remove import form domain project name
-Add commandResults
-
 Create Billing bounded context to handle integration with MSBC and with shipping bounded context
 
-Subfolders under feature folders?
+Finish Scenario 1 till end
+are there fields or all all properties since thay need to be stored in db? 
+Add commandResults
+
+
+Move ShipmentRoute creation from domain service to handler?
 
 Readme format (bullet list, guidelines group)

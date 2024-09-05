@@ -1,8 +1,9 @@
-﻿using Logistics.Domain.Import;
-using Logistics.Domain.Import.ShipmentProcess;
-using Logistics.Domain.Import.ShipmentRoute;
+﻿using Logistics.Domain.Shipping;
+using Logistics.Domain.Shipping.ShipmentProcessing;
+using Logistics.Domain.Shipping.ShipmentProcessing.Repositories;
+using Logistics.Domain.Shipping.ShipmentRouting;
 
-namespace Logistics.Application.Command.Import.ShipmentProcess
+namespace Logistics.Application.Command.Shipping.ShipmentProcess
 {
     public class ShipmentProcessAppService
     {
