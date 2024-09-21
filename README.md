@@ -105,3 +105,7 @@
     - DomainService? Tried to add it to domain service, but ended up with application needing to load transport and separately load transports ShipmentRoutes, which looks like it needs to know to much (and can load some other transports routes, or load this transports routes partially, we can't control it). Tried to move the loading to the domainService, but than it also needs to call repo.update and that should be the responsibility of a app service... tried to return all loaded object from the domain service but than the app service needs to know what to update, and if it misses to update something we have an inconsistency
     - Shipment creation creates ShipmentRoutes so did this with a domain service, and in this case the app service needs to call a repository update for each created aggregate. Left it but would rather have it move to a domain event right? 
  
+# Tehnical
+- to create migrations in the persistance project, with the configuration in the CA project run the following command:
+    - dotnet ef migrations add InitialMigraton --project Logistics.Persistance.Shipping/Logistics.Persistance.Shipping.csproj --startup-project Logistics.Test.CA/Logistics.Test.CA.csproj
+    - this is available by the "CreateHostBuilder" method in the Program.cs file of the CA project

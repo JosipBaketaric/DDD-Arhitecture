@@ -15,6 +15,8 @@ using Logistics.Persistance.Shipping.ShipmentProcess;
 using Logistics.Persistance.Shipping.ShipmentRouting;
 using Logistics.Persistance.Shipping;
 using Logistics.Integration.Internal.Shipping.Billing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 public class Program
 {
     static void Main(string[] args)
@@ -98,5 +100,17 @@ public class Program
         services.AddTransient<IDomainEventHandler<ShipmentDistributionOrganizedDomainEvent>, ShipmentDistributionOrganizedDomainEventHandler>();
 
         services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddDbContext<ShippingDbContext>(options =>
+        {
+            options.UseSqlServer("Server=localhost; Database=Logistics; Integrated Security=True; trustServerCertificate=true");
+        });
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices((context, services) =>
+            {
+                ConfigureServices(services);
+            });
 }

@@ -1,3 +1,4 @@
+DbContext implementation with cross bounded context transactions
 Hangfire for async tasks
 
 Create Billing bounded context to handle integration with MSBC and with shipping bounded context
@@ -7,7 +8,8 @@ are there fields or all all properties since thay need to be stored in db?
 Add commandResults
 Add async
 
-
+Spread IOC container to all projects or not?
 Move ShipmentRoute creation from domain service to handler?
+Remove unnecessary nuget package references (are all these ef core packages necessary in all projects (CA & persistance)?)
 
 Readme format (bullet list, guidelines group)
