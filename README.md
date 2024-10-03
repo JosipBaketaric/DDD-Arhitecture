@@ -81,6 +81,7 @@
     - use inside internal to make many aggregates (from different bounded context) change in same transaction
     - use inside external to change aggregate and make call to external system in same transaction
     - use inside external to add async jobs for external systems (email, payment service...)
+- consider using saga pattern instead of event handlers if the process is complex. Saga raises it's own events, so it can raise an event after an agregate change, that would otherweise not be thrown by the aggregate, so that that event can trigger another saga action - TODO
 
 
 # Questions:
