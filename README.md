@@ -73,7 +73,7 @@
 - favor more api's with simpler logic than fewer with complex logic. Eg. instead of sending all 10 properties to update, with one property having side effects (changing somehting else based on it's value), try to brake it into two, with the one property having side effects clearly separated on the ui (since it will most likely be more intuitive to the user that somehting other than just field update is going on) and having a clear behaviour drive name with it :)
 - It is fine to have same name classes, even behaviour in different modules. Thing is that once we decided a boundary of a bounded countext, we did say that changes to it will happen only for reasons inside it, so we don't want to reuse stuff from other modules, even if it behaves the same, because it will probably have a different reason to change. If we do see a lot of same behavoiur going on, maybe we should revisit our bounded context boundaries.
 ## Validation
-- use ResultPattern rather than exceptions for enforcing invariants and validations
+- use ResultPattern rather than exceptions for enforcing invariants and validations - todo
 - validate command in app layer with stuff it can validate (types, lenght, not null) to improve performance (not having to load a heavy aggeregate just to check for null)
 - validate aggregate inside aggregate for stuff the aggregate knows (it's own properties)
 - validate in domain service stuff that is outside of the aggregate
@@ -95,8 +95,8 @@
 - in application layer we use application services... we could use the command handlers instead, and mediator so the caller does not need to know which app service to call, it can just send the command... but seems to add complexity for no reason, or does it?
 - do we need an Internal project, and should it have implementation of others modules interfaces by using it's domain, or should it have implementations of it's own interfaces by using other modules domains?
 - do we want to use identity classes?
-- class for each table and mapping in repository vs using domain objects directly in configuration mapping? Went with first for now.
-- when changing two aggregates use events? or explicitly in application service? form same or different context in same transaction?
+- class for each table and mapping in repository vs using domain objects directly in configuration mapping? Went with first for now. Better this way because we need those same objects on the query side, and don't want to use domain objects there.
+- when changing two aggregates use events? or explicitly in application service (if we do it here seems like app has too much responsibility, and it could load incorect aggreagates and pass them to domain)? form same or different context in same transaction?
 - use domain events for cross bounded context communication? how? how is it different from using interfaces? hangfire fro eventual consistency scenarios? event handlers outside of transaction through async jobs only?
 - example code of what goes to app service vs what goes to domain service
 - aggregate story - each method (or a small number of them) in it's own interface, than with implementation on class, instead of adding a method directly on a class, so we can end up with one class with many interface implementations. Than we only use the interface where we need, and could potentionally have a repository for each interface to just fill the part of the aggregate needed for that interface. Needs adidtional research, but sounds like we would still have a partially loadaded aggregate and enforcing invariants would be questionable right?
