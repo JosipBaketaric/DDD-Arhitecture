@@ -18,14 +18,17 @@
     - IValueObject
     - ...
   - [ProductName].Persistance.[ModuleName] project - todo
+    - at first start with only one Persistance project, there is to much con's to split them (views for data from other contextes, complicated query side across contexte vs a simple query sid with all available db objects)
     - db scheme for each module, shema name = ModuleName
     - has class for each table form it's db scheme
     - has ef configuration mapping for table to it's corresponding class
-    - has views on tables form other modules (think dbcontext has issues if two models import same tables), so it will disable updates on different schema tables, and will be a clear indicator where integration is happening
     - has folder repositories with implementation of it's modules repositories
     - maps class of each table to domain object property inside repository (use mapping klasses only when needed not by default)
     - has implementation of IUnitOfWork for it's module (inside it is the logic of raising domain events)
     - Migrations folder for migration scripts
+    - below only if module separation is needed:
+        - has views on tables form other modules (think dbcontext has issues if two models import same tables), so it will disable updates on different schema tables, and will be a clear indicator where integration is happening
+    
   - [ProductName].Application.Command.[ModuleName] project
     - folder for each feature
     - under feature folder we put applicationServices, commands, command results of the feature
@@ -34,7 +37,8 @@
   - [ProductName].Application.Query.[ModuleName] project - todo
     - folder for each feature
     - under feature folder we add [QueryDescription]Query.cs class for each query, [QueryDescription]QueryInput.cs (query input class), [ViewDescrittion]View.cs (query results class)
-    - does not use the Domain projects, but uses the Persistance of the module (it's dbContext) to write queries against
+    - does not use the Domain projects, but uses the Persistance objects to write queries against
+      - if using modules on persistance, uses objects of the module (it's dbContext) 
     - security - classes with queries that check access - try to write them as queriables that can be part of the query for better performance
   - [ProductName].API.[ModuleName] - todo
     - folder for each feature
